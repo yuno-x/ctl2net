@@ -1,3 +1,3 @@
-Please refer to
-$ ./ctl2net.sh help
+Please refer to  
+$ ./ctl2net.sh help  
 command.
