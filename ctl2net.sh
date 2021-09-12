@@ -11,24 +11,23 @@ function  printhelp()
       echo -e "[IP Address]  ... IP address with prefix. For example, 192.168.0.11/24." >&2
       echo -e "                  If \"-\" is written in this place, IP address will be not set." >&2
       ;;
-     "create")
+    "create")
       echo -e "usage: $0 $1 [Bridge Name] ([Node Name])..." >&2
       echo -e "" >&2
       echo -e "[Bridge Name] ... Virtual bridge made by ip link command." >&2
       echo -e "[Node Name]   ... Virtual node made by ip netns command." >&2
       ;;
-   "connect")
-      echo -e "usage: $0 $1 [Node Name] [IP Address] [Node Name] [IP Address]" >&2
+    "connect")
+      echo -e "usage: $0 $1 [Node or Bridge Name] [IP Address] [Node or Bridge Name] [IP Address]" >&2
       echo -e "" >&2
-      echo -e "[Node Name]  ... Virtual node (in this time, or bridge) made by ip netns (or ip link) command." >&2
-      echo -e "[IP Address] ... IP address with prefix. For example, 192.168.0.11/24." >&2
-      echo -e "                 If \"-\" is written in this place, IP address will be not set." >&2
+      echo -e "[Node or Bridge Name]  ... Virtual node (or bridge) made by ip netns (or ip link) command." >&2
+      echo -e "[IP Address]           ... IP address with prefix. For example, 192.168.0.11/24." >&2
+      echo -e "                           If \"-\" is written in this place, IP address will be not set." >&2
       ;;
     "delete")
-      echo -e "usage: $0 $1 [Bridge Name] ([Node Name])..." >&2
+      echo -e "usage: $0 $1 ([Node or Bridge Name])..." >&2
       echo -e "" >&2
-      echo -e "[Bridge Name] ... Virtual bridge made by ip link command." >&2
-      echo -e "[Node Name]   ... Virtual node made by ip netns command." >&2
+      echo -e "[Node or Bridge Name]  ... Virtual node (or bridge) made by ip netns (or ip link) command." >&2
       ;;
     *)
       echo -e "usage: $0 [Sub Command]" >&2
@@ -132,17 +131,21 @@ function  delete_node()
     exit -1
   fi
 
-  BR=$1
-  sudo ip link delete $BR
-  for BRIF in `ls /sys/class/net/${BR}_veth*`
+  for NODE in $@
   do
-    sudo ip link delete $BRIF
-  done
+    if [ -d /sys/class/net/$NODE ]
+    then
+      BR=$NODE
+      sudo ip link delete $BR
+      for BRIF in `ls -d /sys/class/net/${BR}_veth* | xargs -n1 basename`
+      do
+        sudo ip link delete $BRIF
+      done
 
-
-  for NODE in ${@:2}
-  do
-    sudo ip netns delete $NODE
+    elif [ "`ip netns | grep -w $NODE`" != "" ]
+    then
+      sudo ip netns delete $NODE
+    fi
   done
 }
 
