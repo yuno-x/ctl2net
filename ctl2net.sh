@@ -25,7 +25,7 @@ function  printhelp()
       echo -e "                           If \"-\" is written in this place, IP address will be not set." >&2
       ;;
     "delete")
-      echo -e "usage: $0 $1 ([Node or Bridge Name])..." >&2
+      echo -e "usage: $0 $1 [Node or Bridge Name]..." >&2
       echo -e "" >&2
       echo -e "[Node or Bridge Name]  ... Virtual node (or bridge) made by ip netns (or ip link) command." >&2
       ;;
@@ -49,7 +49,7 @@ function  printhelp()
 
 function  printversion()
 {
-      echo -e "$0 ver.0.90"
+      echo -e "$0 ver.0.91"
       echo -e "Copyright (C) 2021 Masanori Yuno (github: yuno-x)."
       echo -e "This is free software: you are free to change and redistribute it."
       echo -e "There is NO WARRANTY, to the extent permitted by law."
