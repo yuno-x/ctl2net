@@ -209,11 +209,11 @@ function  connect_node()
       if [ -d /sys/class/net/c_veno0 ]
       then
         sudo ip link set c_veno0 netns $NODE
-        sudo ip netns exec $NODE ip link set c_veno0 name $veth${NEWIFNUM}
+        sudo ip netns exec $NODE ip link set c_veno0 name veth${NEWIFNUM}
       else
         sudo ip link add c_veno0 type veth peer c_venp0
-        sudo ip link set c_venp0 netns $BR
-        sudo ip netns exec $NODE ip link set c_venp0 name $veth${NEWIFNUM}
+        sudo ip link set c_venp0 netns $NODE
+        sudo ip netns exec $NODE ip link set c_venp0 name veth${NEWIFNUM}
       fi
 
 
