@@ -38,7 +38,7 @@ function  printhelp()
       echo -e "  setup               Create bridge and some nodes. Furthermore, set IP address to Node's Interface." >&2
       echo -e "  create              Create bridge and some nodes." >&2
       echo -e "  connect             Connect 2 nodes (or bridges). Furthermore, set IP address to Node's Interface." >&2
-      echo -e "  delete              Delete bridge and some nodes." >&2
+      echo -e "  delete              Delete some nodes and bridges." >&2
       echo -e "" >&2
       echo -e "For example:" >&2
       echo -e "  $0 setup br0 node0 172.18.0.10/24 node1 172.18.0.11/24 node2 172.18.0.12/24" >&2
@@ -145,6 +145,8 @@ function  delete_node()
     elif [ "`ip netns | grep -w $NODE`" != "" ]
     then
       sudo ip netns delete $NODE
+    else
+      echo -e "$NODE does not exist as node or bridge." >&2
     fi
   done
 }
@@ -227,9 +229,11 @@ function  connect_node()
 
       sudo ip netns exec $NODE ip link set veth${NEWIFNUM} up
 
+    else
+      echo -e "$NODE does not exist as node or bridge." >&2
     fi
 
-    n=$(( $n + 1 ))
+    n=$(( $n + 2 ))
   done
 }
 
