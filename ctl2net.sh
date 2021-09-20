@@ -136,11 +136,11 @@ function  delete_node()
     if [ -d /sys/class/net/$NODE ]
     then
       BR=$NODE
-      sudo ip link delete $BR
-      for BRIF in `ls -d /sys/class/net/${BR}_veth* | xargs -n1 basename`
+      for BRIF in `ip link show master $BR type veth | sed -n "s/.*[ \t]\([^ \t]*\)@[^ \t]*:.*/\1/gp"`
       do
         sudo ip link delete $BRIF
       done
+      sudo ip link delete $BR
 
     elif [ "`ip netns | grep -w $NODE`" != "" ]
     then
