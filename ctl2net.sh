@@ -49,7 +49,7 @@ function  printhelp()
 
 function  printversion()
 {
-      echo -e "$0 ver.0.91"
+      echo -e "$0 ver.0.92"
       echo -e "Copyright (C) 2021 Masanori Yuno (github: yuno-x)."
       echo -e "This is free software: you are free to change and redistribute it."
       echo -e "There is NO WARRANTY, to the extent permitted by law."
@@ -63,6 +63,9 @@ function  create_node()
 
     exit -1
   fi
+
+  sudo sysctl -w net.ipv4.ip_forward=1
+  sudo sysctl -w net.bridge.bridge-nf-call-iptables=0
 
   BR=$1
   sudo ip link add $BR type bridge
@@ -92,6 +95,9 @@ function  setup_node()
 
     exit -1
   fi
+
+  sudo sysctl -w net.ipv4.ip_forward=1
+  sudo sysctl -w net.bridge.bridge-nf-call-iptables=0
 
   BR=$1
   sudo ip link add $BR type bridge
